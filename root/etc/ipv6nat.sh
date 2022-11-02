@@ -30,9 +30,9 @@ uci commit network
 
 # 2. Change the first letter of the "IPv6 ULA Prefix" from "f" to "d"
 # ULA，全称为“唯一的本地 IPv6 单播地址”（Unique Local IPv6 Unicast Address）。这一步，我们要把它的前缀由 f 改为 d ，以将本地的 IPv6 地址向外广播，而不是 localhost 那样的闭环。
-echo -e "\n$(date +"%Y-%m-%d %H:%M:%S") 2. Change the first letter of the \"IPv6 ULA Prefix\" from \"f\" to \"d\"\n"
-uci set network.globals.ula_prefix="$(uci get network.globals.ula_prefix | sed 's/^./d/')"
-uci commit network
+#echo -e "\n$(date +"%Y-%m-%d %H:%M:%S") 2. Change the first letter of the \"IPv6 ULA Prefix\" from \"f\" to \"d\"\n"
+#uci set network.globals.ula_prefix="$(uci get network.globals.ula_prefix | sed 's/^./d/')"
+#uci commit network
 
 
 # 3. Set the DHCP server to "Always announce default router"  # 将 DHCP 服务器模式设置为“总是广播默认路由”
@@ -90,7 +90,7 @@ boot() {
  
         logger -t NAT6 "Setting up NAT6"
  
-        WAN6_INTERFACE=$(uci get "network.$WAN6_NAME.ifname")
+        WAN6_INTERFACE=pppoe-wan
         if [ -z "$WAN6_INTERFACE" ] || [ ! -e "/sys/class/net/$WAN6_INTERFACE/" ] ; then
                 logger -t NAT6 "Fatal error: Lookup of $WAN6_NAME interface failed. Were the default interface names changed?" && exit 1
         fi
@@ -199,7 +199,7 @@ fi
 # 8. 加入转发规则，编辑 /etc/firewall.user ，或路由器界面防火墙规则里加上 ip6tables -t nat -I POSTROUTING -s dfff::/64 -j MASQUERADE
 echo -e "\n$(date +"%Y-%m-%d %H:%M:%S") 8. Add POSTROUTING / MASQUERADE rules to firewall.\n"
 echo "ip6tables -t nat -I POSTROUTING -s $(uci get network.globals.ula_prefix) -j MASQUERADE" >> /etc/firewall.user
-/etc/init.d/firewall restart
+#/etc/init.d/firewall restart
 
 
 echo -e "\n$(date +"%Y-%m-%d %H:%M:%S") Execute \"/etc/ipv6nat.sh\" script end!\n"
