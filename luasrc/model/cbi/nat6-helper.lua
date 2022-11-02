@@ -32,7 +32,7 @@ init.inputtitle = translate("执行 IPv6 初始化脚本")
 init.inputstyle = "apply"
 init.description = translate("执行 IPv6 初始化脚本 ( /etc/ipv6nat.sh )，仅需执行一次！执行完后点击保存&应用！")
 function init.write(self, section)
-	io.popen("bash /etc/ipv6nat.sh >> /etc/ipv6nat.log 2>&1")
+	io.popen("sh /etc/ipv6nat.sh >> /etc/ipv6nat.log 2>&1")
 end
 
 return m
